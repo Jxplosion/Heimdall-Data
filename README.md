@@ -21,7 +21,7 @@ Public data drop for OmniSolution's Repair library. Claude builds data files her
 1. Claude builds the CSV from the source data and commits it here.
 2. The Repair library's hidden `Import` tab gets `=IMPORTDATA("<raw link at that commit>")`.
 3. Claude checks the row count and a text checksum against the source.
-4. One paste-values call copies the block into the target tab; the checksum is checked again.
+4. Before pasting, the target range is read as it stands and compared with the source: rows edited since the source was built are never pasted over. Test loads go to an empty range. Then one paste-values call copies the block into the target tab and the checksum is checked again.
 5. The `Import` tab is cleared and the load is logged in `LOADS.md`, in Work log - Claude and, for a new kind of load, in the Decisions log.
 
 ## For team members (Strider, Lumi, Wren)
