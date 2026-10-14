@@ -14,11 +14,12 @@ Public data drop for OmniSolution's Repair library. Claude builds data files her
 | Path | What it holds |
 |---|---|
 | `repair-library/loads/` | One CSV per load: `YYYY-MM-DD-<what>.csv`. The columns match the target tab exactly (Guides: 24 columns, ID through Notes). |
-| `repair-library/LOADS.md` | One line per load: date, file, target tab and rows, row count, checksum, result. |
+| `repair-library/LOADS.md` | One line per load: date, file, source and license, target tab and rows, row count, checksum, result. |
+| `SOURCES.md` | Every source we load from: its license, the attribution we give, when the license was last checked, and which loads used it. Updated in the same commit as every load. |
 
 ## How a load runs
 
-1. Claude builds the CSV from the source data and commits it here.
+1. Claude checks the source's license page. If it is new or changed, it is recorded in `SOURCES.md` first: no row there means no load, and non-commercial, no-derivatives or unlicensed sources are never bulk-loaded. Claude then builds the CSV from the source data and commits it, together with the `SOURCES.md` update: verified date and the load added to that source's Loads line.
 2. The Repair library's hidden `Import` tab gets `=IMPORTDATA("<raw link at that commit>")`.
 3. Claude checks the row count and a text checksum against the source.
 4. Before pasting, the target range is read as it stands and compared with the source: rows edited since the source was built are never pasted over. Test loads go to an empty range. Then one paste-values call copies the block into the target tab and the checksum is checked again.
@@ -34,4 +35,11 @@ Public data drop for OmniSolution's Repair library. Claude builds data files her
 
 ## Licensing
 
-Content taken from Repair Wiki is CC BY-SA 3.0: every row credits Repair Wiki and the page's contributors in its Notes column, and adaptations stay under the same license. Links point to the original pages.
+The license of every source is recorded in [SOURCES.md](SOURCES.md), which is updated with every load.
+
+Content taken from Repair Wiki is CC BY-SA 3.0:
+- every row credits Repair Wiki and the page's contributors in its Notes column;
+- links point to the original pages;
+- load files built from it in `repair-library/loads/` stay under CC BY-SA 3.0.
+
+iFixit (CC BY-NC-SA) is never bulk-loaded. The library only links its guides and summarizes them in our own words.
